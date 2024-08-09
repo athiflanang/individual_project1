@@ -1,7 +1,5 @@
-const { where } = require('sequelize')
-const { v2: cloudinary } = require('cloudinary')
-const { Bookmark } = require('../models')
 const axios = require('axios')
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 class MonsterController {
   static async getAllMonster(req, res, next) {
@@ -38,57 +36,29 @@ class MonsterController {
     }
   }
 
-  static async addBookmark(req, res, next) {
+  static async GoogleGenerativeAI(req, res, next) {
     try {
+      const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" })
       const { id } = req.params
-      const { userId } = req.loginInfo
       const { data } = await axios.get(`https://mhw-db.com/monsters/${id}`)
 
-      if (!data) {
-        throw ({ name: "NotFound", id })
-      }
+      const monsterId = data.id
+      const monsterName = data.name
+      const monsterDesc = data.description
 
-      // const userId = req.user.id
-      // console.log(userId, "<<<<<<< ini login info");
+      const prompt = `please make a short and informative fun fact on this monster with id: ${monsterId} and name: ${monsterName} with this description: ${monsterDesc}, from the game monster hunter world`
 
-      const addBookmark = await Bookmark.create({
-        userId,
-        monsterId: id,
-        monsterName: data.name
-      })
-
-      //console.log(addBookmark, "<<<< ini bookmark"); //success add bookmark, uncomment for proof
-
-      res.status(201).json({
-        message: "Successfully add bookmark",
-        addBookmark
-      })
-    } catch (error) {
-      next(error)
-    }
-  }
-
-  static async deleteBookmark(req, res, next) {
-    try {
-      const { id } = req.params
-      let findBookmark = await Bookmark.findByPk(id)
-
-      if (!findBookmark) {
-        throw ({ name: "NotFound", id })
-      }
-
-      const deleteBookmark = await Bookmark.destroy({
-        where: {
-          id
-        },
-      })
+      //`please make a short and informative fun fact on this monster with id: ${monsterId} and name: ${monsterName} with this description: ${monsterDesc}, from the game monster hunter world`
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
 
       res.status(200).json({
-        message: `Successfully delete bookmark with id ${id}`,
-        findBookmark
+        text
       })
     } catch (error) {
-      next(error)
+      res.send(error)
     }
   }
 }
