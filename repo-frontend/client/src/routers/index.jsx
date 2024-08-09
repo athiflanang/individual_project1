@@ -1,10 +1,16 @@
 import { createBrowserRouter, redirect } from "react-router-dom";
+import Login from "../views/Login";
+import BaseLayout from "../views/BaseLayout";
 import Homepage from "../views/Homepage";
+import DetailPage from "../views/DetailPage";
+import BookmarkPage from "../views/BookmarkPage";
+
+const url = `http://localhost:3000`; /*<<<<< ini url localhost*/
 
 const router = createBrowserRouter([
   {
     path: "/login",
-    element: <Login />,
+    element: <Login url={url} />,
     loader: () => {
       if (localStorage.access_token) {
         Toastify({
@@ -53,7 +59,19 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Homepage />,
+        element: <Homepage url={url} />,
+      },
+      {
+        path: "/detail/:id",
+        element: <DetailPage url={url} />,
+      },
+      {
+        path: "/bookmark/detail/:id",
+        element: <DetailPage url={url} />,
+      },
+      {
+        path: "/bookmark",
+        element: <BookmarkPage url={url} />,
       },
     ],
   },

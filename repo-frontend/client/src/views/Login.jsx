@@ -1,7 +1,8 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Toastify from "toastify-js";
+import { GoogleLogin } from "@react-oauth/google";
 
 export default function Login({ url }) {
   const [username, setUsername] = useState("");
@@ -33,6 +34,40 @@ export default function Login({ url }) {
           fontWeight: "bold",
         },
       }).showToast();
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+      Toastify({
+        text: error,
+        duration: 2000,
+        newWindow: true,
+        close: true,
+        gravity: "bottom",
+        position: "right",
+        stopOnFocus: true,
+        style: {
+          background: "#EF4C54",
+          color: "#17202A",
+          boxShadow: "0 5px 10px black",
+          fontWeight: "bold",
+        },
+      }).showToast();
+    }
+  }
+
+  async function googleLogin(codeResponse) {
+    try {
+      console.log(codeResponse);
+      const { data } = await axios.post(
+        `${url}/google-login`,
+        {},
+        {
+          headers: {
+            token: codeResponse.credential,
+          },
+        }
+      );
+      localStorage.setItem("access_token", data.access_token);
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -114,6 +149,9 @@ export default function Login({ url }) {
               <button onClick={login} className="btn-neutral btn btn-block">
                 Login
               </button>
+            </div>
+            <div className="mt-6 flex justify-center items-center">
+              <GoogleLogin onSuccess={googleLogin} />
             </div>
           </form>
         </div>

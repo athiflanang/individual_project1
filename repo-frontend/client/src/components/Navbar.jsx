@@ -40,16 +40,16 @@ export default function Navbar() {
                   <a href="">Home</a>
                 </li>
               </Link>
-              <Link to="/addUser">
+              <Link to="/bookmark">
                 <li>
-                  <a href="">Add User</a>
+                  <a href="">Bookmark</a>
                 </li>
               </Link>
             </ul>
           </div>
           <a
             href=""
-            className="btn btn-ghost text-xl text-boneWhite hover:text-darkGold"
+            className="btn btn-ghost text-xl text-white hover:bg-blue-400"
           >
             MonsterPedia
           </a>
@@ -58,15 +58,15 @@ export default function Navbar() {
           <ul className="menu menu-horizontal px-1 gap-4">
             <Link to="/">
               <li>
-                <a className="font-semibold text-boneWhite hover:bg-darkGold hover:text-black">
+                <a className="font-semibold text-white hover:bg-blue-400">
                   Home
                 </a>
               </li>
             </Link>
-            <Link to="/addUser">
+            <Link to="/bookmark">
               <li>
-                <a className="font-semibold text-boneWhite hover:bg-darkGold hover:text-black">
-                  Add User
+                <a className="font-semibold text-white hover:bg-blue-400">
+                  Bookmark
                 </a>
               </li>
             </Link>
