@@ -10,7 +10,7 @@ export default function DetailPage({ url }) {
   const [findId, setFindId] = useState([]);
   const [GeminiPrompt, setGeminiPrompt] = useState("");
   const [getAddBookmark, setAddBookmark] = useState({});
-  const [getUploadImage, setUploadImage] = useState("");
+  const [getUploadImage, setUploadImage] = useState({});
 
   async function PopulateDetailMonster() {
     try {
@@ -77,17 +77,13 @@ export default function DetailPage({ url }) {
 
   async function uploadImage() {
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const { data } = await axios.post(`${url}/upload`, formData, {
+      const { data } = await axios.post(`${url}/upload`, {
         headers: {
           Authorization: `Bearer ${localStorage.access_token}`,
-          "Content-Type": "multipart/form-data",
         },
       });
       Toastify({
-        text: "Success Add Image",
+        text: "Success Add Bookmark",
         duration: 2000,
         newWindow: true,
         close: true,
@@ -101,7 +97,7 @@ export default function DetailPage({ url }) {
           fontWeight: "bold",
         },
       }).showToast();
-      setUploadImage(data.data.imageUrl);
+      setUploadImage(data.data);
     } catch (error) {
       console.log(error);
     }
@@ -124,12 +120,11 @@ export default function DetailPage({ url }) {
         <div className="flex justify-center">
           <div className="flex justify-items-center">
             <div className="flex justify-center items-center gap-4 mx-10">
-              <form
-                action={uploadImage}
+              <img
+                src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
+                alt=""
                 className="w-1/2 flex justify-center rounded-3xl"
-              >
-                <input type="file" onChange={getUploadImage} />
-              </form>
+              />
               <p className="p-6 bg-blue-300 h-full rounded-3xl text-3xl font-bold text-white">
                 Description:
                 <p className="text-xl font-medium">{findId.description}</p>
@@ -139,6 +134,12 @@ export default function DetailPage({ url }) {
                     onClick={() => addBookmark(findId.id)}
                   >
                     Bookmark
+                  </button>
+                  <button
+                    className="btn btn-primary align-bottom mt-5"
+                    onClick={() => uploadImage}
+                  >
+                    Add Image
                   </button>
                 </div>
               </p>
