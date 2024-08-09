@@ -5,7 +5,8 @@ import Homepage from "../views/Homepage";
 import DetailPage from "../views/DetailPage";
 import BookmarkPage from "../views/BookmarkPage";
 
-const url = `http://localhost:3000`; /*<<<<< ini url localhost*/
+// const url = `http://localhost:3000`; /*<<<<< ini url localhost*/
+const url = `https://server.athiflanang.site`;
 
 const router = createBrowserRouter([
   {
